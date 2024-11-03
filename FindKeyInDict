@@ -1,0 +1,36 @@
+def main():
+    value = demisto.args().get('stringToSearch')
+    inp = demisto.args().get('inputDict')
+    key_value = ""
+    result_key = get_path_value(inp, value, key_value)
+    if result_key:
+        results = {'KeyFound': result_key}
+        return_results(CommandResults(outputs_prefix='KeyValueSearched',outputs=results))
+    else:
+        return_results('No Value Found')
+
+def get_path_value(inp, value, key_value):
+
+    if inp == value:
+        return f'{key_value}'
+
+    elif isinstance(inp,dict):
+        for k,v in inp.items():
+            new_key_value = f'{key_value}.{k}' if key_value else k
+            result =  get_path_value(v, value, new_key_value)
+            if result:
+                return result
+
+    elif isinstance(inp, list):
+        for i, item in enumerate(inp):
+            new_key_value = f'{key_value}.{i}' if key_value else str(i)
+            result =  get_path_value(item, value, new_key_value)
+            if result:
+                return result
+
+    return None
+
+
+
+if __name__ in ('__main__', '__builtin__', 'builtins'):
+    main()

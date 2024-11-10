@@ -1,0 +1,37 @@
+def main():
+    inp_days = demisto.args().get('days')
+    final_results = []
+    match_index = False
+    try:
+        incidents = demisto.executeCommand("GetFailedTasks",
+                                        {"query": f'-status:closed -category:job created:>="{inp_days} days ago" '})[0]["Contents"]
+        for i, incident in enumerate(incidents):
+            if not final_results:
+                create_entry = {"IncidentId": incident["Incident ID"],
+                                "PlaybookName": [incident["Playbook Name"]],
+                                "TaskId" : [incident["Task ID"]],
+                                "TaskName": [incident["Task Name"]]}
+                final_results.append(create_entry)
+            else:
+                for j, saved_entry in enumerate(final_results):
+                    match_index = 0
+                    if incident["Incident ID"] == saved_entry["IncidentId"]:
+                        set(saved_entry["PlaybookName"].append(incident["Playbook Name"]))
+                        set(saved_entry["TaskId"].append(incident["Task ID"]))
+                        set(saved_entry["TaskName"].append(incident["Task Name"]))
+                        match_index = True
+
+                if not match_index:
+                    create_entry = {"IncidentId": incident["Incident ID"],
+                                "PlaybookName": [incident["Playbook Name"]],
+                                "TaskId" : [incident["Task ID"]],
+                                "TaskName": [incident["Task Name"]]}
+                    final_results.append(create_entry)
+
+
+        return_results(TableOrListWidget(final_results))
+
+    except Exception as e:
+        return_results(str(e))
+if __name__ in ["__main__", "builtin", "builtins"]:
+    main()

@@ -1,0 +1,13 @@
+curl --request POST \
+  --url <url> \
+  --header 'Accept: application/json, Example 1' \
+  --header 'Content-Type: application/json' \
+  --header 'authorization: ' \
+  --header 'id: ' \
+  --data '{
+  "request_data": {
+    "role_names": [
+      "string"
+    ]
+  }
+}'

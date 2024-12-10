@@ -1,0 +1,12 @@
+import requests
+
+token = demisto.args().get('Token')
+url = f"""https://ext-secops-xsoar.crtx.us.paloaltonetworks.com/xsoar/instance/execute/Generic_Webhook_instance_1"""
+body = '{"string_field":"string_field_value","array_field":["item1","item2"]}'
+
+headers = {'Authorization': token,
+            'content-type': 'application/json' }
+
+response = requests.post(url, headers=headers, data=body)
+
+print(response)

@@ -1,0 +1,26 @@
+import random
+
+incident = json.loads(demisto.executeCommand("getList", {"listName":"IncidentReport"})[0]["Contents"])
+kpi = json.loads(demisto.executeCommand("getList", {"listName":"Metrics"})[0]["Contents"])
+index = 0
+color = ["rgb(179, 128, 195)",
+            "rgb(77, 49, 224)",
+            "rgb(71, 240, 92)",
+            "rgb(7, 164, 243)",
+            "rgb(139, 161, 45)",
+            "rgb(120, 168, 61)",
+            "rgb(24, 125, 230)",
+            "rgb(128, 236, 213)"
+            ]
+tap_incident_count = incident["TAP Incidents"]
+tap_kpi_widget = []
+tap_kpi = kpi["TAP Incident"]
+for k,v in tap_kpi.items():
+    kpi_name = f'{k}'
+    data = (int(tap_kpi[k]) * tap_incident_count)/60
+    tap_kpi_widget.append({"name": kpi_name,
+                            "data": [int(data)],
+                            "color": color[index]})
+    index +=1
+
+return_results(json.dumps(tap_kpi_widget));

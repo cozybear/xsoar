@@ -1,0 +1,11 @@
+incident = json.loads(demisto.executeCommand("getList", {"listName":"IncidentReport"})[0]["Contents"])
+kpi = json.loads(demisto.executeCommand("getList", {"listName":"Metrics"})[0]["Contents"])
+
+tap_incident_count = incident["TAP Incidents"]
+total_hours = 0
+tap_kpi = kpi["TAP Incident"]
+for k,v in tap_kpi.items():
+    kpi_name = f'TAP KPI {k}'
+    total_hours = total_hours + (int(tap_kpi[k]) * tap_incident_count)
+
+return_results(NumberWidget(int(total_hours/60)))

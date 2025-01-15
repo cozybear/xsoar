@@ -1,0 +1,45 @@
+#from_value = int(demisto.args().get('fromValue'))
+from_value = demisto.args()['from']
+null = None
+headers = {
+    "authorization": "<API Key>",
+    "x-xdr-auth-id": "<API KeyID>",
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+}
+
+body = {
+    "id": "7406549d-a345-42a1-8814-19196046f1aa",
+    "name": "IncidentCount",
+    "dataType": "incidents",
+    "widgetType": "number",
+    "query": "",
+    "dateRange": {
+    "fromDate": from_value,
+    "toDate": "0001-01-01T00:00:00Z",
+    # "period": {
+    #   "by": "",
+    #   "byTo": "",
+    #   "byFrom": "days",
+    #   "toValue": null,
+    #   "fromValue": from_value,
+    #   "field": ""
+    # },
+    "params": {
+    "valuesFormat": "abbreviated"
+  },
+
+},
+     "category": ""
+}
+
+url = "/xsoar/public/v2/statistics/widgets/query"
+output = demisto.executeCommand("core-api-post", {"uri": url,
+                                        "using": "Gaiatop_CoreRestAPI",
+                                        "body" : body
+
+})[0]['Contents']['response']
+return_results(output)
+
+
+
